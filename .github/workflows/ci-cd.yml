@@ -1,11 +1,10 @@
 name: CI/CD Pipeline
 
-# Ejecutar solo manualmente
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Ejecución manual
 
 jobs:
-  build-and-push:
+  build-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -20,9 +19,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+      - name: Generate Docker image tag
+        id: vars
+        run: echo "tag=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
           context: .
           push: true
-          tags: tu_usuario/todo-app:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/todo-app:${{ env.tag }}
+
+      - name: Output Docker image tag
+        run: echo "Image pushed with tag: ${{ env.tag }}"
