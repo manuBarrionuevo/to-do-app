@@ -31,5 +31,6 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/todo-app:${{ env.tag }}
 
-      - name: Output Docker image tag
-        run: echo "Image pushed with tag: ${{ env.tag }}"
+      - name: Generate Docker image tag
+        run: echo "tag=${GITHUB_SHA::7}" >> $GITHUB_ENV
+        
