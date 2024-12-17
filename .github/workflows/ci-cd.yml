@@ -21,7 +21,8 @@ jobs:
 
       - name: Generate Docker image tag
         id: vars
-        run: echo "tag=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+        run: |
+          echo "tag=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
